@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriBox Delivery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between py-4 px-6">
+      <div class="flex items-center gap-3">
+        <img src="nutribox.jpg" alt="NutriBox Logo" class="w-14 h-14">
+        <h1 class="text-2xl font-bold text-green-600 tracking-tight">NutriBox Delivery</h1>
+      </div>
+      <nav class="hidden md:flex gap-6 font-medium text-gray-600">
+        <a href="#sobre" class="hover:text-green-600 transition">Sobre</a>
+        <a href="#cardapio" class="hover:text-green-600 transition">Cardápio</a>
+        <a href="#contato" class="hover:text-green-600 transition">Contato</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative bg-gradient-to-r from-green-600 to-green-500 text-white py-28 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-5xl font-extrabold mb-6 tracking-tight">Sua marmita saudável todos os dias</h2>
+      <p class="text-lg mb-10 opacity-90">Escolha entre opções balanceadas ou monte a sua do jeito que quiser.</p>
+      <a href="#cardapio" class="bg-white text-green-600 px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-100 transition">Ver Cardápio</a>
+    </div>
+  </section>
+
+  <!-- Sobre -->
+  <section id="sobre" class="max-w-6xl mx-auto px-6 py-24 text-center">
+    <h3 class="text-3xl font-bold text-green-600 mb-6">Quem somos</h3>
+    <p class="text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto">Na <strong>NutriBox Delivery</strong>, acreditamos que comer bem deve ser simples, acessível e prazeroso. Preparamos marmitas com ingredientes frescos e selecionados, pensadas para quem busca praticidade sem abrir mão da saúde e do sabor.</p>
+  </section>
+
+  <!-- Cardápio Inteligente -->
+  <section id="cardapio" class="bg-gray-50 py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <h3 class="text-4xl font-bold text-green-600 text-center mb-10">Nosso Cardápio</h3>
+
+      <!-- Controles -->
+      <div class="flex flex-wrap gap-4 justify-center mb-10">
+        <input id="search" type="text" placeholder="Buscar prato..." 
+               class="px-4 py-2 border rounded-lg w-64">
+        <select id="filterCategory" class="px-4 py-2 border rounded-lg">
+          <option value="">Todas as categorias</option>
+        </select>
+        <select id="sortBy" class="px-4 py-2 border rounded-lg">
+          <option value="relevance">Relevância</option>
+          <option value="price-asc">Preço: menor → maior</option>
+          <option value="price-desc">Preço: maior → menor</option>
+        </select>
+      </div>
+
+      <!-- Grid do cardápio -->
+      <div id="menuGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
+
+      <!-- Carrinho -->
+      <div id="cart" class="fixed bottom-6 right-6 bg-white shadow-xl rounded-2xl p-6 w-80 max-h-[70vh] overflow-y-auto hidden">
+        <h4 class="font-bold text-xl mb-4">Carrinho (<span id="cartCount">0</span>)</h4>
+        <div id="cartItems" class="space-y-2"></div>
+        <div class="flex justify-between mt-4 font-semibold">
+          <span>Total:</span>
+          <span id="cartTotal">R$ 0,00</span>
+        </div>
+        <button id="checkoutBtn" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Finalizar pelo WhatsApp</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QR Code -->
+  <section class="py-20 bg-gray-100 text-center">
+    <h3 class="text-2xl font-bold text-green-600 mb-6">Peça agora pelo QR Code</h3>
+    <div class="flex justify-center">
+      <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://wa.me/5519992154061" alt="QR Code" class="mx-auto rounded-md">
+        <p class="mt-4 text-gray-600">Escaneie com a câmera do celular e faça seu pedido no WhatsApp!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contato -->
+  <footer id="contato" class="bg-green-600 text-white py-16">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h4 class="text-xl font-bold mb-4">Entre em contato</h4>
+      <p class="mb-1">WhatsApp: (55) 1999215 - 4061</p>
+      <p class="mb-1">Instagram: @nutribox.fit01</p>
+      <p class="mt-8 text-sm opacity-80">&copy; 2025 NutriBox Delivery - Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+  <!-- Script do Cardápio -->
+  
+<script>
+  const menuData = [
+    {id:"f1",name:"Box Energia Verde",desc:"Peito de frango grelhado, brócolis, arroz integral e salada fresca.",price:24.90,category:"Frango Fit",img:"imagens/energia-verde.jpg"},
+    {id:"f2",name:"Box Power Sweet",desc:"Peito de frango grelhado, batata-doce assada, cenoura e couve-flor.",price:25.90,category:"Frango Fit",img:"imagens/power-sweet.jpg"},
+    {id:"c1",name:"Box Nutri Raiz",desc:"Carne moída temperada, mandioca cozida e mix de legumes.",price:26.90,category:"Carne Sabor",img:"imagens/nutri-raiz.jpg"},
+    {id:"c2",name:"Box Força Máxima",desc:"Bife de patinho grelhado, arroz integral, feijão preto e salada fresca.",price:28.90,category:"Carne Sabor",img:"imagens/forca-maxima.jpg"},
+    {id:"p1",name:"Box Oceano Fit",desc:"Filé de peixe grelhado, arroz integral e brócolis.",price:29.90,category:"Peixe Leve",img:"imagens/oceano-fit.jpg"},
+    {id:"p2",name:"Box Mar e Terra",desc:"Peixe grelhado, purê de mandioca e legumes salteados.",price:30.90,category:"Peixe Leve",img:"imagens/mar-terra.jpg"},
+    {id:"o1",name:"Box Protein Plus",desc:"Omelete de claras, couve, batata-doce e tomate.",price:19.90,category:"Ovo Prático",img:"imagens/protein-plus.jpg"},
+    {id:"o2",name:"Box Colorido",desc:"Ovos mexidos, arroz integral, abobrinha e salada fresca.",price:20.90,category:"Ovo Prático",img:"imagens/colorido.jpg"},
+    {id:"v1",name:"Box Verde Natural",desc:"Mix de legumes, feijão preto e arroz integral.",price:21.90,category:"Veggie Balance",img:"imagens/verde-natural.jpg"},
+    {id:"v2",name:"Box Raiz Saudável",desc:"Purê de batata-doce, berinjela grelhada, mandioca e salada fresca.",price:22.90,category:"Veggie Balance",img:"imagens/raiz-saudavel.jpg"}
+  ];
+
+  let cart = {};
+
+  const menuGrid = document.getElementById("menuGrid");
+  const searchInput = document.getElementById("search");
+  const filterCategory = document.getElementById("filterCategory");
+  const sortBy = document.getElementById("sortBy");
+  const cartEl = document.getElementById("cart");
+  const cartItemsEl = document.getElementById("cartItems");
+  const cartCountEl = document.getElementById("cartCount");
+  const cartTotalEl = document.getElementById("cartTotal");
+  const checkoutBtn = document.getElementById("checkoutBtn");
+
+  function renderMenu(){
+    let items = [...menuData];
+    const q = searchInput.value.toLowerCase();
+    if(q) items = items.filter(i => (i.name+i.desc).toLowerCase().includes(q));
+    if(filterCategory.value) items = items.filter(i=>i.category===filterCategory.value);
+    if(sortBy.value==="price-asc") items.sort((a,b)=>a.price-b.price);
+    if(sortBy.value==="price-desc") items.sort((a,b)=>b.price-a.price);
+
+    menuGrid.innerHTML = "";
+    items.forEach(i=>{
+      const card = document.createElement("div");
+      card.className="bg-white p-6 rounded-2xl shadow hover:shadow-xl transition text-center";
+      card.innerHTML=`
+        <img src="${i.img}" alt="${i.name}" class="w-full h-40 object-cover rounded-lg mb-4">
+        <h5 class="font-bold text-lg text-green-600 mb-2">${i.name}</h5>
+        <p class="text-gray-600 mb-3">${i.desc}</p>
+        <p class="font-semibold text-lg mb-4">R$ ${i.price.toFixed(2).replace('.',',')}</p>
+        <button class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700" data-id="${i.id}">Adicionar</button>
+      `;
+      card.querySelector("button").onclick=()=>addToCart(i.id);
+      menuGrid.appendChild(card);
+    });
+  }
+
+  function addToCart(id){
+    cart[id]=(cart[id]||0)+1;
+    updateCart();
+  }
+
+  function changeQty(id, delta){
+    const current = cart[id]||0;
+    const next = current + delta;
+    if(next <= 0){
+      delete cart[id];
+    } else {
+      cart[id] = next;
+    }
+    updateCart();
+  }
+
+  function setQty(id, qty){
+    qty = parseInt(qty) || 0;
+    if(qty <= 0){
+      delete cart[id];
+    } else {
+      cart[id] = qty;
+    }
+    updateCart();
+  }
+
+  function updateCart(){
+    const entries = Object.entries(cart);
+    cartItemsEl.innerHTML="";
+    let total=0, count=0;
+    entries.forEach(([id,qty])=>{
+      const item = menuData.find(i=>i.id===id);
+      if(!item) return;
+      total += item.price*qty; count+=qty;
+      const row=document.createElement("div");
+      row.className="flex items-center justify-between text-sm bg-gray-50 rounded-lg p-2";
+      row.innerHTML=`
+        <div class="flex items-center gap-3">
+          <img src="${item.img}" alt="${item.name}" class="w-12 h-12 object-cover rounded"/>
+          <div>
+            <div class="font-semibold">${item.name}</div>
+            <div class="text-xs text-gray-500">R$ ${item.price.toFixed(2).replace('.',',')}</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="qty-decrease px-2 py-1 rounded bg-gray-100" data-id="${id}">−</button>
+          <input type="number" min="1" class="w-12 text-center border rounded qty-input" data-id="${id}" value="${qty}" />
+          <button class="qty-increase px-2 py-1 rounded bg-gray-100" data-id="${id}">+</button>
+          <button class="remove text-red-500 text-sm ml-2" data-id="${id}">Remover</button>
+        </div>
+      `;
+      // attach listeners
+      row.querySelector(".qty-decrease").onclick = ()=>changeQty(id, -1);
+      row.querySelector(".qty-increase").onclick = ()=>changeQty(id, 1);
+      row.querySelector(".remove").onclick = ()=>{ delete cart[id]; updateCart(); };
+      const input = row.querySelector(".qty-input");
+      input.onchange = (e)=> {
+        const v = parseInt(e.target.value) || 1;
+        if(v < 1) { e.target.value = 1; }
+        setQty(id, v);
+      };
+      input.onkeyup = (e)=> {
+        // allow quick edits with keyboard then apply on blur/change
+      };
+      cartItemsEl.appendChild(row);
+    });
+    cartTotalEl.textContent="R$ "+total.toFixed(2).replace('.',',');
+    cartCountEl.textContent=count;
+    cartEl.style.display = count>0?"block":"none";
+  }
+
+  checkoutBtn.onclick=()=>{
+    if(Object.keys(cart).length===0) return;
+    const items=Object.entries(cart).map(([id,qty])=>{
+      const item=menuData.find(i=>i.id===id);
+      return `${item.name} x${qty}`;
+    }).join("%0A");
+    const url=`https://wa.me/5519992154061?text=Olá!%20Quero%20fazer%20um%20pedido:%0A${items}`;
+    window.open(url,"_blank");
+  }
+
+  function populateCategories(){
+    [...new Set(menuData.map(i=>i.category))].forEach(c=>{
+      const opt=document.createElement("option");
+      opt.value=c; opt.textContent=c;
+      filterCategory.appendChild(opt);
+    });
+  }
+
+  searchInput.oninput=renderMenu;
+  filterCategory.onchange=renderMenu;
+  sortBy.onchange=renderMenu;
+
+  populateCategories();
+  renderMenu();
+  </script>
+
+</body>
+</html>

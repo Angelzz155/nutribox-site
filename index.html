@@ -94,7 +94,8 @@
   </footer>
 
   <!-- Script do Cardápio -->
-  <script>
+  
+<script>
   const menuData = [
     {id:"f1",name:"Box Energia Verde",desc:"Peito de frango grelhado, brócolis, arroz integral e salada fresca.",price:24.90,category:"Frango Fit",img:"imagens/energia-verde.jpg"},
     {id:"f2",name:"Box Power Sweet",desc:"Peito de frango grelhado, batata-doce assada, cenoura e couve-flor.",price:25.90,category:"Frango Fit",img:"imagens/power-sweet.jpg"},
@@ -148,6 +149,28 @@
     cart[id]=(cart[id]||0)+1;
     updateCart();
   }
+
+  function changeQty(id, delta){
+    const current = cart[id]||0;
+    const next = current + delta;
+    if(next <= 0){
+      delete cart[id];
+    } else {
+      cart[id] = next;
+    }
+    updateCart();
+  }
+
+  function setQty(id, qty){
+    qty = parseInt(qty) || 0;
+    if(qty <= 0){
+      delete cart[id];
+    } else {
+      cart[id] = qty;
+    }
+    updateCart();
+  }
+
   function updateCart(){
     const entries = Object.entries(cart);
     cartItemsEl.innerHTML="";
@@ -157,14 +180,42 @@
       if(!item) return;
       total += item.price*qty; count+=qty;
       const row=document.createElement("div");
-      row.className="flex justify-between text-sm";
-      row.innerHTML=`<span>${item.name} x ${qty}</span><span>R$ ${(item.price*qty).toFixed(2).replace('.',',')}</span>`;
+      row.className="flex items-center justify-between text-sm bg-gray-50 rounded-lg p-2";
+      row.innerHTML=`
+        <div class="flex items-center gap-3">
+          <img src="${item.img}" alt="${item.name}" class="w-12 h-12 object-cover rounded"/>
+          <div>
+            <div class="font-semibold">${item.name}</div>
+            <div class="text-xs text-gray-500">R$ ${item.price.toFixed(2).replace('.',',')}</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="qty-decrease px-2 py-1 rounded bg-gray-100" data-id="${id}">−</button>
+          <input type="number" min="1" class="w-12 text-center border rounded qty-input" data-id="${id}" value="${qty}" />
+          <button class="qty-increase px-2 py-1 rounded bg-gray-100" data-id="${id}">+</button>
+          <button class="remove text-red-500 text-sm ml-2" data-id="${id}">Remover</button>
+        </div>
+      `;
+      // attach listeners
+      row.querySelector(".qty-decrease").onclick = ()=>changeQty(id, -1);
+      row.querySelector(".qty-increase").onclick = ()=>changeQty(id, 1);
+      row.querySelector(".remove").onclick = ()=>{ delete cart[id]; updateCart(); };
+      const input = row.querySelector(".qty-input");
+      input.onchange = (e)=> {
+        const v = parseInt(e.target.value) || 1;
+        if(v < 1) { e.target.value = 1; }
+        setQty(id, v);
+      };
+      input.onkeyup = (e)=> {
+        // allow quick edits with keyboard then apply on blur/change
+      };
       cartItemsEl.appendChild(row);
     });
     cartTotalEl.textContent="R$ "+total.toFixed(2).replace('.',',');
     cartCountEl.textContent=count;
     cartEl.style.display = count>0?"block":"none";
   }
+
   checkoutBtn.onclick=()=>{
     if(Object.keys(cart).length===0) return;
     const items=Object.entries(cart).map(([id,qty])=>{
@@ -190,5 +241,6 @@
   populateCategories();
   renderMenu();
   </script>
+
 </body>
 </html>
